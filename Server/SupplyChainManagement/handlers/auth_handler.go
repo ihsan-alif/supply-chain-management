@@ -55,3 +55,25 @@ func LoginHandler(c *gin.Context) {
 		"token": token,
 	})
 }
+
+func ProfileHandler(c *gin.Context) {
+	
+	userID, _ := c.Get("user_id")
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Authorized",
+		"user_id": userID,
+	})
+}
+
+func Me(c *gin.Context) {
+	userID, _ := c.Get("user_id")
+	email, _ := c.Get("email")
+	role, _ := c.Get("role")
+
+	c.JSON(http.StatusOK, gin.H{
+		"user_id": userID, 
+		"email": email,
+		"role": role,
+	})
+}

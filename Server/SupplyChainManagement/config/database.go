@@ -49,6 +49,7 @@ func runMigration() {
 	err := DB.AutoMigrate(
 		&models.Role{},
 		&models.User{},
+		&models.Category{},
 	)
 
 	if err != nil {

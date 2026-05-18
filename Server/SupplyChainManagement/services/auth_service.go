@@ -38,15 +38,12 @@ func Login(request dto.LoginRequest) (string, error) {
 		return "", err
 	}
 
-	validPassword := utils.CheckPassword(
-		request.Password,
-		user.Password,
-	)
+	validPassword := utils.CheckPassword(request.Password, user.Password)
 	if !validPassword {
 		return "", err
 	}
 
-	token, err := utils.GenerateToken(user.ID.String())
+	token, err := utils.GenerateToken(user.ID.String(), user.Email, user.Role.Name)
 	if err != nil {
 		return "", err
 	}

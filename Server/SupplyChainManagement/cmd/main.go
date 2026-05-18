@@ -13,6 +13,7 @@ func main() {
 
 	r := gin.Default()
 	routes.AuthRoute(r)
+	routes.CategoryRoute(r)
 
 	port := os.Getenv("APP_PORT")
 	if port == "" {
