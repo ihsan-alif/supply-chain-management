@@ -9,9 +9,9 @@ import (
 	"github.com/ihsan-alif/supply-chain-management/services"
 )
 
-func CreateCategoryHandler(c *gin.Context) {
+func CreateProductHandler(c *gin.Context) {
 
-	var request dto.CategoryRequest
+	var request dto.ProductRequest
 
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -20,7 +20,7 @@ func CreateCategoryHandler(c *gin.Context) {
 		return
 	}
 
-	err := services.CreateCategory(request)
+	err := services.CreateProduct(request)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
@@ -29,11 +29,11 @@ func CreateCategoryHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
-		"message": "Category created",
+		"message": "Product created",
 	})
 }
 
-func GetCategoriesHandler(c *gin.Context) {
+func GetProductsHandler(c *gin.Context) {
 
 	page, _ := strconv.Atoi(
 		c.DefaultQuery("page", "1"),
@@ -47,7 +47,7 @@ func GetCategoriesHandler(c *gin.Context) {
 
 	offset := (page - 1) * limit
 
-	categories, total, err := services.GetCategories(
+	products, total, err := services.GetProducts(
 		limit,
 		offset,
 		search,
@@ -61,37 +61,37 @@ func GetCategoriesHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": categories,
+		"data": products,
 		"meta": gin.H{
-			"page":  page,
+			"page": page,
 			"limit": limit,
 			"total": total,
 		},
 	})
 }
 
-func GetCategoryByIDHandler(c *gin.Context) {
+func GetProductByIDHandler(c *gin.Context) {
 
 	id := c.Param("id")
 
-	category, err := services.GetCategoryByID(id)
+	product, err := services.GetProductByID(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"message": "Category not found",
+			"message": "Product not found",
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": category,
+		"data": product,
 	})
 }
 
-func UpdateCategoryHandler(c *gin.Context) {
+func UpdateProductHandler(c *gin.Context) {
 
 	id := c.Param("id")
 
-	var request dto.CategoryRequest
+	var request dto.ProductRequest
 
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -100,32 +100,32 @@ func UpdateCategoryHandler(c *gin.Context) {
 		return
 	}
 
-	err := services.UpdateCategory(id, request)
+	err := services.UpdateProduct(id, request)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Category updated",
+		"message": "Product updated",
 	})
 }
 
-func DeleteCategoryHandler(c *gin.Context) {
+func DeleteProductHandler(c *gin.Context) {
 
 	id := c.Param("id")
 
-	err := services.DeleteCategory(id)
+	err := services.DeleteProduct(id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Category deleted",
+		"message": "Product deleted",
 	})
 }

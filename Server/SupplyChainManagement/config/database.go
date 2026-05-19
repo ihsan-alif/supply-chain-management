@@ -50,6 +50,7 @@ func runMigration() {
 		&models.Role{},
 		&models.User{},
 		&models.Category{},
+		&models.Product{},
 	)
 
 	if err != nil {
