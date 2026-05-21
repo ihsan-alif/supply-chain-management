@@ -15,6 +15,8 @@ func main() {
 	routes.AuthRoute(r)
 	routes.CategoryRoute(r)
 	routes.ProductRoute(r)
+	routes.WarehouseRoute(r)
+	routes.ProductStockRoute(r)
 
 	port := os.Getenv("APP_PORT")
 	if port == "" {
