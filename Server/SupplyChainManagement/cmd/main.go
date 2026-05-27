@@ -17,6 +17,7 @@ func main() {
 	routes.ProductRoute(r)
 	routes.WarehouseRoute(r)
 	routes.ProductStockRoute(r)
+	routes.StockMovementRoute(r)
 
 	port := os.Getenv("APP_PORT")
 	if port == "" {

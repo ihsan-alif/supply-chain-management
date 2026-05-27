@@ -16,6 +16,7 @@ func CreateWarehouseHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
+		return
 	}
 
 	err := services.CreateWarehouse(request)
@@ -23,6 +24,7 @@ func CreateWarehouseHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
 		})
+		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
@@ -37,6 +39,7 @@ func GetWarehousesHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -54,6 +57,7 @@ func UpdateWarehouseHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
+		return
 	}
 
 	err := services.UpdateWarehouse(id, request)
@@ -61,6 +65,7 @@ func UpdateWarehouseHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
 		})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -77,6 +82,7 @@ func DeleteWarehouseHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"messsage": err.Error(),
 		})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{

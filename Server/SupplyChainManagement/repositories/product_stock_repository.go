@@ -12,7 +12,7 @@ func SaveOrIncrementStock(stock *models.ProductStock) error {
 		Columns: []clause.Column{{Name: "product_id"}, {Name: "warehouse_id"}},
 		DoUpdates: clause.Assignments(map[string]any{
 			"stock": clause.Expr{
-				SQL: "product_stock.stock + EXCLUDED.stock",
+				SQL: "product_stocks.stock + EXCLUDED.stock",
 			},
 			"updated_at": clause.Expr{
 				SQL: "CURRENT_TIMESTAMP",

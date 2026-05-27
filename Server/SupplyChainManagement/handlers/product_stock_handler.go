@@ -16,6 +16,7 @@ func CreateProductStockHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
+		return
 	}
 
 	err := services.CreateProductStock(request)
@@ -23,6 +24,7 @@ func CreateProductStockHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
 		})
+		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
@@ -37,6 +39,7 @@ func GetProductStocksHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
 		})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{

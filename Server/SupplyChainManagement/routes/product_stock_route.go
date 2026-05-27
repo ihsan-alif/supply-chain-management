@@ -8,7 +8,7 @@ import (
 
 func ProductStockRoute(r *gin.Engine) {
 
-	productStock := r.Group("/api/produt-stocks")
+	productStock := r.Group("/api/product-stocks")
 
 	productStock.Use(middleware.AuthMiddleware())
 
