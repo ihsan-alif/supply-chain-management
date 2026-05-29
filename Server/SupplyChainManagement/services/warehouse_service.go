@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/google/uuid"
 	"github.com/ihsan-alif/supply-chain-management/models"
 	"github.com/ihsan-alif/supply-chain-management/models/dto"
@@ -29,6 +31,11 @@ func UpdateWarehouse(id string, request dto.WarehouseRequest) error {
 		return err
 	}
 
+	_, err = repositories.GetWarehouseByID(warehouseID)
+	if err != nil {
+		return errors.New("warehouse not found")
+	}
+
 	warehouse := models.Warehouse{
 		Name:    request.Name,
 		Address: request.Address,
@@ -44,6 +51,11 @@ func DeleteWarehouse(id string) error {
 	warehouseID, err := uuid.Parse(id)
 	if err != nil {
 		return err
+	}
+
+	_, err = repositories.GetWarehouseByID(warehouseID)
+	if err != nil {
+		return errors.New("warehouse not found")
 	}
 
 	return repositories.DeleteWarehouse(warehouseID)

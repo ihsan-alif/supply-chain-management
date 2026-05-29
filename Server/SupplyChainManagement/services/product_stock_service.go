@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/google/uuid"
 	"github.com/ihsan-alif/supply-chain-management/models"
 	"github.com/ihsan-alif/supply-chain-management/models/dto"
@@ -19,13 +21,23 @@ func CreateProductStock(request dto.ProductStockRequest) error {
 		return err
 	}
 
+	_, err = repositories.GetProductByID(productUUID)
+	if err != nil {
+		return errors.New("product not found")
+	}
+
+	_, err = repositories.GetWarehouseByID(warehouseUUID)
+	if err != nil {
+		return errors.New("warehouse not found")
+	}
+
 	stock := models.ProductStock{
 		ProductID:   productUUID,
 		WarehouseID: warehouseUUID,
 		Stock:       request.Stock,
 	}
 
-	return repositories.SaveOrIncrementStock(&stock)
+	return repositories.SaveOrIncrementStock(nil, &stock)
 }
 
 func GetProductStocks() ([]models.ProductStock, error) {

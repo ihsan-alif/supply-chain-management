@@ -40,40 +40,42 @@ func CreateStockMovement(request dto.StockMovementRequest, userID string) error 
 
 	stock, err := repositories.GetProductStock(tx, productUUID, warehouseUUID)
 
+	currentStockQty := 0
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			if request.Type == "OUT" {
 				return errors.New("insufficient stock: data stock does not exist")
 			}
-
-			stock = &models.ProductStock{
-
-				ProductID:   productUUID,
-				WarehouseID: warehouseUUID,
-				Stock:       0,
-			}
-
-			stock.ID = uuid.New()
+			currentStockQty = 0
 		} else {
 			return err
 		}
+	} else {
+		currentStockQty = stock.Stock
 	}
 
+	var calculatedQty int
 	switch request.Type {
 	case "IN":
-		stock.Stock += request.Qty
+		calculatedQty = request.Qty
 	case "OUT":
-		if stock.Stock < request.Qty {
+		if currentStockQty < request.Qty {
 			return errors.New("insufficient stock")
 		}
-		stock.Stock -= request.Qty
+		calculatedQty = -request.Qty
 	case "ADJUSTMENT":
-		stock.Stock = request.Qty
+		calculatedQty = request.Qty - currentStockQty
 	default:
 		return errors.New("invalid stock movement type")
 	}
 
-	err = repositories.UpdateProductStock(tx, stock)
+	stockPayload := models.ProductStock{
+		ProductID:   productUUID,
+		WarehouseID: warehouseUUID,
+		Stock:       calculatedQty,
+	}
+
+	err = repositories.SaveOrIncrementStock(tx, &stockPayload)
 	if err != nil {
 		return err
 	}

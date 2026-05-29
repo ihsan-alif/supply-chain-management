@@ -2,13 +2,14 @@ package handlers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/ihsan-alif/supply-chain-management/models/dto"
 	"github.com/ihsan-alif/supply-chain-management/services"
 )
 
-func CreateStockMovement(c *gin.Context) {
+func CreateStockMovementHandler(c *gin.Context) {
 
 	var request dto.StockMovementRequest
 
@@ -23,14 +24,23 @@ func CreateStockMovement(c *gin.Context) {
 
 	err := services.CreateStockMovement(request, userID)
 	if err != nil {
-		if err.Error() == "insufficient stock" || err.Error() == "invalid stock movement type" || err.Error() == "insufficient stock: data stock does not exist" {
+		errStr := err.Error()
+		if errStr == "insufficient stock" || errStr == "invalid stock movement type" || errStr == "insufficient stock: data stock does not exist" {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"message": err.Error(),
+				"message": errStr,
 			})
+			return
+		}
+
+		if strings.Contains(errStr, "not found") {
+			c.JSON(http.StatusNotFound, gin.H{
+				"message": errStr,
+			})
+			return
 		}
 
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err.Error(),
+			"message": errStr,
 		})
 		return
 	}
@@ -40,12 +50,12 @@ func CreateStockMovement(c *gin.Context) {
 	})
 }
 
-func GetStockMovements(c *gin.Context) {
+func GetStockMovementsHandler(c *gin.Context) {
 
 	movements, err := services.GetStockMovements()
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
 		})
 		return

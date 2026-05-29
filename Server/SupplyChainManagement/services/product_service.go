@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/google/uuid"
 	"github.com/ihsan-alif/supply-chain-management/models"
 	"github.com/ihsan-alif/supply-chain-management/models/dto"
@@ -10,9 +12,13 @@ import (
 func CreateProduct(request dto.ProductRequest) error {
 
 	categoryUUID, err := uuid.Parse(request.CategoryID)
-
 	if err != nil {
 		return err
+	}
+
+	_, err = repositories.GetCategoryByID(categoryUUID)
+	if err != nil {
+		return errors.New("category not found")
 	}
 
 	product := models.Product{
@@ -59,6 +65,16 @@ func UpdateProduct(id string, request dto.ProductRequest) error {
 		return err
 	}
 
+	_, err = repositories.GetProductByID(productID)
+	if err != nil {
+		return errors.New("product not found")
+	}
+
+	_, err = repositories.GetCategoryByID(categoryUUID)
+	if err != nil {
+		return errors.New("category not found")
+	}
+
 	product := models.Product{
 		CategoryID:   categoryUUID,
 		Code:         request.Code,
@@ -79,6 +95,11 @@ func DeleteProduct(id string) error {
 	productID, err := uuid.Parse(id)
 	if err != nil {
 		return err
+	}
+
+	_, err = repositories.GetProductByID(productID)
+	if err != nil {
+		return errors.New("product not found")
 	}
 
 	return repositories.DeleteProduct(productID)

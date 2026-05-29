@@ -25,11 +25,6 @@ func GetProductStock(tx *gorm.DB, productID uuid.UUID, warehouseID uuid.UUID) (*
 	return &stock, err
 }
 
-func UpdateProductStock(tx *gorm.DB, stock *models.ProductStock) error {
-
-	return tx.Save(stock).Error
-}
-
 func GetStockMovements() ([]models.StockMovement, error) {
 
 	var movements []models.StockMovement

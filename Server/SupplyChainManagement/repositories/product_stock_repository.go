@@ -3,12 +3,17 @@ package repositories
 import (
 	"github.com/ihsan-alif/supply-chain-management/config"
 	"github.com/ihsan-alif/supply-chain-management/models"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-func SaveOrIncrementStock(stock *models.ProductStock) error {
+func SaveOrIncrementStock(db *gorm.DB, stock *models.ProductStock) error {
 
-	return config.DB.Clauses(clause.OnConflict{
+	if db == nil {
+		db = config.DB
+	}
+
+	return db.Clauses(clause.OnConflict{
 		Columns: []clause.Column{{Name: "product_id"}, {Name: "warehouse_id"}},
 		DoUpdates: clause.Assignments(map[string]any{
 			"stock": clause.Expr{

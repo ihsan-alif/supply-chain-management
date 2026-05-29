@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/google/uuid"
 	"github.com/ihsan-alif/supply-chain-management/models"
 	"github.com/ihsan-alif/supply-chain-management/models/dto"
@@ -48,6 +50,11 @@ func UpdateCategory(id string, request dto.CategoryRequest) error {
 		return err
 	}
 
+	_, err = repositories.GetCategoryByID(categoryID)
+	if err != nil {
+		return errors.New("category not found")
+	}
+
 	return repositories.UpdateCategoryName(categoryID, request.Name)
 }
 
@@ -56,6 +63,11 @@ func DeleteCategory(id string) error {
 	categoryID, err := uuid.Parse(id)
 	if err != nil {
 		return err
+	}
+
+	_, err = repositories.GetCategoryByID(categoryID)
+	if err != nil {
+		return errors.New("category not found")
 	}
 
 	return repositories.DeleteCategory(categoryID)

@@ -54,6 +54,7 @@ func runMigration() {
 		&models.Warehouse{},
 		&models.ProductStock{},
 		&models.StockMovement{},
+		&models.Partner{},
 	)
 
 	if err != nil {

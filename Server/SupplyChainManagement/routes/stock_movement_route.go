@@ -12,6 +12,6 @@ func StockMovementRoute(r *gin.Engine) {
 
 	movement.Use(middleware.AuthMiddleware())
 
-	movement.POST("/", handlers.CreateStockMovement)
-	movement.GET("/", handlers.GetStockMovements)
+	movement.POST("/", handlers.CreateStockMovementHandler)
+	movement.GET("/", handlers.GetStockMovementsHandler)
 }
